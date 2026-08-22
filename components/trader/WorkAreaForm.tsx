@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Calendar, CheckCircle, MapPin, Navigation, Plus } from 'lucide-react';
-import { traderService } from '@/services/trader.service';
-import { WorkArea } from '@/types';
+import React, { useState } from "react";
+import { Calendar, CheckCircle, MapPin, Navigation, Plus } from "lucide-react";
+import { traderService } from "@/services/trader.service";
+import { WorkArea } from "@/types";
 
 type Props = {
   onSuccess?: (workArea: WorkArea) => void;
 };
 
 export default function WorkAreaForm({ onSuccess }: Props) {
-  const [workDate, setWorkDate] = useState(new Date().toISOString().split('T')[0]);
-  const [postalCodePrefix, setPostalCodePrefix] = useState('SW1');
-  const [city, setCity] = useState('London');
+  const [workDate, setWorkDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [postalCodePrefix, setPostalCodePrefix] = useState("SW1");
+  const [city, setCity] = useState("London");
   const [radiusKm, setRadiusKm] = useState(15);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -32,7 +34,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
         radiusKm,
       });
 
-      setMessage(`Work area for postal prefix ${postalCodePrefix.toUpperCase()} saved for ${workDate}!`);
+      setMessage(
+        `Work area for postal prefix ${postalCodePrefix.toUpperCase()} saved for ${workDate}!`,
+      );
       if (onSuccess && res.data) {
         onSuccess(res.data);
       }
@@ -52,7 +56,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
           </div>
           <div>
             <h3 className="font-bold text-sm">Set Daily Postal Coverage</h3>
-            <p className="text-[11px] text-slate-400">Define coverage prefix area for specific work dates</p>
+            <p className="text-[11px] text-slate-400">
+              Define coverage prefix area for specific work dates
+            </p>
           </div>
         </div>
       </div>
@@ -89,7 +95,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-400 mb-1 font-medium">City / Region</label>
+            <label className="block text-slate-400 mb-1 font-medium">
+              City / Region
+            </label>
             <input
               type="text"
               placeholder="e.g. Central London"
@@ -100,7 +108,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
           </div>
 
           <div>
-            <label className="block text-slate-400 mb-1 font-medium">Coverage Radius (Km)</label>
+            <label className="block text-slate-400 mb-1 font-medium">
+              Coverage Radius (Km)
+            </label>
             <input
               type="number"
               value={radiusKm}
@@ -113,9 +123,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
         {message && (
           <div
             className={`p-2.5 rounded-xl text-xs flex items-center gap-2 ${
-              message.startsWith('Error')
-                ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                : 'bg-teal-500/10 text-teal-300 border border-teal-500/20'
+              message.startsWith("Error")
+                ? "bg-rose-500/10 text-rose-400 border border-rose-500/20"
+                : "bg-teal-500/10 text-teal-300 border border-teal-500/20"
             }`}
           >
             <CheckCircle className="w-4 h-4 shrink-0" />
@@ -129,7 +139,9 @@ export default function WorkAreaForm({ onSuccess }: Props) {
           className="w-full py-2.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-slate-950 font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/20"
         >
           <Plus className="w-4 h-4" />
-          <span>{isLoading ? 'Saving Coverage Zone...' : 'Save Daily Coverage Area'}</span>
+          <span>
+            {isLoading ? "Saving Coverage Zone..." : "Save Daily Coverage Area"}
+          </span>
         </button>
       </form>
     </div>

@@ -1,20 +1,27 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, Suspense } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { CheckCircle2, Clock, Home, MapPin, ShieldCheck, Sparkles } from 'lucide-react';
-import { paymentService } from '@/services/payment.service';
-import { Booking } from '@/types';
+import React, { useEffect, useState, Suspense } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import {
+  CheckCircle2,
+  Clock,
+  Home,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
+import { paymentService } from "@/services/payment.service";
+import { Booking } from "@/types";
 
 function BookingSuccessContent() {
   const searchParams = useSearchParams();
-  const bookingId = searchParams.get('booking_id');
-  const sessionId = searchParams.get('session_id');
+  const bookingId = searchParams.get("booking_id");
+  const sessionId = searchParams.get("session_id");
 
   const [booking, setBooking] = useState<Booking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const confirm = async () => {
@@ -24,13 +31,16 @@ function BookingSuccessContent() {
       }
 
       try {
-        const res = await paymentService.confirmPayment(bookingId, sessionId || undefined);
+        const res = await paymentService.confirmPayment(
+          bookingId,
+          sessionId || undefined,
+        );
         if (res.data?.booking) {
           setBooking(res.data.booking);
-          setMessage(res.data.message || 'Payment confirmed successfully!');
+          setMessage(res.data.message || "Payment confirmed successfully!");
         }
       } catch (err: any) {
-        console.warn('Payment confirmation error:', err);
+        console.warn("Payment confirmation error:", err);
       } finally {
         setIsLoading(false);
       }
@@ -45,8 +55,12 @@ function BookingSuccessContent() {
         <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto animate-spin">
           <Sparkles className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold text-white">Confirming Payment & Reservation...</h2>
-        <p className="text-xs text-slate-400">Communicating with Stripe and updating trader schedule...</p>
+        <h2 className="text-xl font-bold text-white">
+          Confirming Payment & Reservation...
+        </h2>
+        <p className="text-xs text-slate-400">
+          Communicating with Stripe and updating trader schedule...
+        </p>
       </div>
     );
   }
@@ -63,7 +77,8 @@ function BookingSuccessContent() {
         </span>
         <h1 className="text-3xl font-black text-white">Booking Accepted!</h1>
         <p className="text-slate-400 text-xs sm:text-sm">
-          Your payment has been split and routed directly to the trader with a £5 flat platform fee captured.
+          Your payment has been split and routed directly to the trader with a
+          £5 flat platform fee captured.
         </p>
       </div>
 
@@ -71,23 +86,36 @@ function BookingSuccessContent() {
         <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl text-left text-xs space-y-4 shadow-2xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
-              <span className="text-slate-500 block text-[10px]">SERVICE PROVIDER</span>
-              <span className="font-bold text-white text-sm">{booking.trader?.businessName || 'Verified Trader'}</span>
+              <span className="text-slate-500 block text-[10px]">
+                SERVICE PROVIDER
+              </span>
+              <span className="font-bold text-white text-sm">
+                {booking.trader?.businessName || "Verified Trader"}
+              </span>
             </div>
             <div className="text-right">
-              <span className="text-slate-500 block text-[10px]">TOTAL PAID</span>
-              <span className="font-black text-emerald-400 text-base">£{booking.quotedAmount} GBP</span>
+              <span className="text-slate-500 block text-[10px]">
+                TOTAL PAID
+              </span>
+              <span className="font-black text-emerald-400 text-base">
+                £{booking.quotedAmount} GBP
+              </span>
             </div>
           </div>
 
           <div className="space-y-2 text-slate-300">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Scheduled Start: {new Date(booking.scheduledStart).toLocaleString()}</span>
+              <span>
+                Scheduled Start:{" "}
+                {new Date(booking.scheduledStart).toLocaleString()}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Address: {booking.serviceAddress} ({booking.servicePostal})</span>
+              <span>
+                Address: {booking.serviceAddress} ({booking.servicePostal})
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -112,7 +140,13 @@ function BookingSuccessContent() {
 
 export default function BookingSuccessPage() {
   return (
-    <Suspense fallback={<div className="text-center py-20 text-slate-400 text-xs">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="text-center py-20 text-slate-400 text-xs">
+          Loading...
+        </div>
+      }
+    >
       <BookingSuccessContent />
     </Suspense>
   );

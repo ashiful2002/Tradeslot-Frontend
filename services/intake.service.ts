@@ -1,5 +1,5 @@
-import { api } from './api';
-import { ApiResponse } from '../types';
+import { api } from "./api";
+import { ApiResponse } from "../types";
 
 export type IntakeResponse = {
   conversationId: string;
@@ -21,7 +21,7 @@ export type IntakeResponse = {
 
 export const intakeService = {
   async sendWebMessage(traderId: string, message: string, customerId?: string) {
-    const res = await api.post<ApiResponse<any>>('/messages/web', {
+    const res = await api.post<ApiResponse<any>>("/messages/web", {
       traderId,
       message,
       customerId,

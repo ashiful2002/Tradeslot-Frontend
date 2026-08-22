@@ -1,4 +1,4 @@
-export type UserRole = 'CUSTOMER' | 'TRADER' | 'ADMIN';
+export type UserRole = "CUSTOMER" | "TRADER" | "ADMIN";
 
 export type User = {
   id: string;
@@ -44,7 +44,8 @@ export type TimeSlot = {
   reason?: string;
 };
 
-export type BookingStatus = 'PENDING' | 'ACCEPTED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+export type BookingStatus =
+  "PENDING" | "ACCEPTED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
 
 export type Booking = {
   id: string;

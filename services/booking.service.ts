@@ -1,5 +1,5 @@
-import { api } from './api';
-import { ApiResponse, Booking, BookingStatus, TimeSlot } from '../types';
+import { api } from "./api";
+import { ApiResponse, Booking, BookingStatus, TimeSlot } from "../types";
 
 export const bookingService = {
   async checkSlotAvailability(params: {
@@ -9,10 +9,9 @@ export const bookingService = {
     durationMinutes?: number;
     bufferMinutes?: number;
   }) {
-    const res = await api.get<ApiResponse<{ date: string; postalCode: string; slots: TimeSlot[] }>>(
-      '/bookings/available-slots',
-      { params }
-    );
+    const res = await api.get<
+      ApiResponse<{ date: string; postalCode: string; slots: TimeSlot[] }>
+    >("/bookings/available-slots", { params });
     return res.data;
   },
 
@@ -26,7 +25,7 @@ export const bookingService = {
     quotedAmount: number;
     notes?: string;
   }) {
-    const res = await api.post<ApiResponse<Booking>>('/bookings', payload);
+    const res = await api.post<ApiResponse<Booking>>("/bookings", payload);
     return res.data;
   },
 
@@ -35,13 +34,21 @@ export const bookingService = {
     return res.data;
   },
 
-  async getAllBookings(params?: { status?: BookingStatus; traderId?: string; customerId?: string; page?: number }) {
-    const res = await api.get<ApiResponse<Booking[]>>('/bookings', { params });
+  async getAllBookings(params?: {
+    status?: BookingStatus;
+    traderId?: string;
+    customerId?: string;
+    page?: number;
+  }) {
+    const res = await api.get<ApiResponse<Booking[]>>("/bookings", { params });
     return res.data;
   },
 
   async updateBookingStatus(id: string, status: BookingStatus) {
-    const res = await api.patch<ApiResponse<Booking>>(`/bookings/${id}/status`, { status });
+    const res = await api.patch<ApiResponse<Booking>>(
+      `/bookings/${id}/status`,
+      { status },
+    );
     return res.data;
   },
 };

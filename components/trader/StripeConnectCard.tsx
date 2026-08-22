@@ -1,8 +1,15 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { ArrowUpRight, CheckCircle2, CreditCard, ExternalLink, ShieldCheck, Sparkles } from 'lucide-react';
-import { paymentService } from '@/services/payment.service';
+import React, { useEffect, useState } from "react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  CreditCard,
+  ExternalLink,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
+import { paymentService } from "@/services/payment.service";
 
 export default function StripeConnectCard() {
   const [status, setStatus] = useState<{
@@ -20,7 +27,7 @@ export default function StripeConnectCard() {
         setStatus(res.data);
       }
     } catch (err) {
-      console.warn('Connect status error:', err);
+      console.warn("Connect status error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +45,9 @@ export default function StripeConnectCard() {
         window.location.href = res.data.onboardingUrl;
       }
     } catch (err: any) {
-      alert(`Stripe Onboarding Failed: ${err?.response?.data?.message || err.message}`);
+      alert(
+        `Stripe Onboarding Failed: ${err?.response?.data?.message || err.message}`,
+      );
     } finally {
       setIsGenerating(false);
     }
@@ -66,7 +75,9 @@ export default function StripeConnectCard() {
               <span>Stripe Connect Payouts</span>
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
             </h3>
-            <p className="text-[11px] text-slate-400">Direct earnings payout with automated £5.00 flat platform fee</p>
+            <p className="text-[11px] text-slate-400">
+              Direct earnings payout with automated £5.00 flat platform fee
+            </p>
           </div>
         </div>
 
@@ -85,12 +96,16 @@ export default function StripeConnectCard() {
       <div className="text-xs space-y-2 text-slate-300">
         <div className="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
           <span className="text-slate-400">Stripe Account ID:</span>
-          <span className="font-mono text-indigo-300">{status?.stripeAccountId || 'Not Connected'}</span>
+          <span className="font-mono text-indigo-300">
+            {status?.stripeAccountId || "Not Connected"}
+          </span>
         </div>
 
         <div className="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
           <span className="text-slate-400">Platform Fee Split:</span>
-          <span className="font-medium text-emerald-400">£5.00 flat fee per completed booking</span>
+          <span className="font-medium text-emerald-400">
+            £5.00 flat fee per completed booking
+          </span>
         </div>
       </div>
 
@@ -101,12 +116,19 @@ export default function StripeConnectCard() {
           className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
         >
           <ExternalLink className="w-4 h-4" />
-          <span>{isGenerating ? 'Generating Onboarding Link...' : 'Complete Stripe Express Onboarding'}</span>
+          <span>
+            {isGenerating
+              ? "Generating Onboarding Link..."
+              : "Complete Stripe Express Onboarding"}
+          </span>
         </button>
       ) : (
         <div className="p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-xs text-emerald-300 flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>Your bank account is linked to receive instant customer payouts after booking acceptance!</span>
+          <span>
+            Your bank account is linked to receive instant customer payouts
+            after booking acceptance!
+          </span>
         </div>
       )}
     </div>

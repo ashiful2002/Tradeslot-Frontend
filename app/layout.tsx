@@ -1,13 +1,14 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import Navbar from '../components/layout/Navbar';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "../components/layout/Navbar";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'TradeSlot — Booking Platform for Tradespeople',
-  description: 'Book verified local tradespeople with automated scheduling, travel buffers, and Stripe Connect payments.',
+  title: "TradeSlot — Booking Platform for Tradespeople",
+  description:
+    "Book verified local tradespeople with automated scheduling, travel buffers, and Stripe Connect payments.",
 };
 
 export default function RootLayout({
