@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 TradeSlot Frontend — AI-Powered Multi-Channel Trade Booking Web App
 
-## Getting Started
+TradeSlot Frontend is a high-performance, modern web application built with **Next.js (App Router), TypeScript, and Tailwind CSS**. It provides a frictionless user experience for finding local tradespeople, requesting AI-assisted bookings, and completing secure payments.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🌟 Key Features
+
+- **Interactive Web AI Booking Chatbot**:
+  - Embedded floating drawer (`WebChatWidget.tsx`) featuring real-time natural language intake.
+  - Automatically parses service details, matches verified professionals, queries 30-minute travel buffer slots, and redirects directly to Stripe Checkout.
+- **Unified Custom Color Palette**:
+  - Designed around Electric Cyan (`#38b6ff`) and Royal Purple (`#8c52ff`) CSS tokens.
+  - Glassmorphic panels, dark mode depth, and micro-animations.
+- **Trader Network Directory**:
+  - Responsive directory featuring search by business name or trade category (Plumbing, Electrical, Carpentry, HVAC, etc.).
+- **Role-Based User Dashboards**:
+  - **Trader Portal**: Configure daily postal work area, track upcoming job reservations, and connect Stripe account for payouts.
+  - **Customer Portal**: Review booking history, service status, and payment receipts.
+  - **Admin Dashboard**: Overview platform revenue, total bookings, and active tradespeople.
+
+---
+
+## ⚙️ Tech Stack
+
+| Technology | Purpose |
+| :--- | :--- |
+| **Next.js 16 (App Router)** | Full-stack React Framework |
+| **TypeScript** | Type safety across API services & UI components |
+| **Tailwind CSS v4** | Custom design system & utility classes |
+| **TanStack React Query** | Async state management & API data fetching |
+| **Lucide React Icons** | Modern icon set |
+| **Axios** | HTTP client with bearer token interceptors |
+
+---
+
+## 🎨 Design Tokens
+
+The application uses global CSS variables defined in `app/globals.css`:
+
+```css
+:root {
+  --primary: #38b6ff;      /* Electric Cyan */
+  --secondary: #8c52ff;    /* Royal Purple */
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `.brand-gradient`: `linear-gradient(135deg, #38b6ff 0%, #8c52ff 100%)`
+- `.glass-panel`: Glassmorphic slate-900 panels with backdrop blur
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### 1. Prerequisites
+- Node.js `v18+` or `v20+`
+- `pnpm` installed globally (`npm install -g pnpm`)
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Environment Setup
+Create a `.env.local` file in the root directory:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_API_BASE_URL="http://localhost:5001/api/v1"
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Installation & Local Execution
 
-## Deploy on Vercel
+```bash
+# Install dependencies
+pnpm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Run development server
+pnpm dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+
+---
+
+## 📁 Folder Structure
+
+```
+tradeslot_frontend/
+├── app/                      # Next.js App Router pages & layouts
+│   ├── all-traders/          # Complete trader directory
+│   ├── booking/              # Checkout & success confirmation pages
+│   ├── dashboard/            # Role-based dashboard views (@customer, @trader, @admin)
+│   ├── login/                # Authentication portal
+│   └── register/             # User registration
+├── components/
+│   ├── chatbot/              # WebChatWidget & GlobalFloatingChatbot
+│   ├── layout/               # Navbar & Footer
+│   ├── trader/               # StripeConnectCard & WorkAreaForm
+│   └── ui/                   # TraderCard & StatusModal
+├── hooks/                    # TanStack Query custom hooks
+├── services/                 # Axios API service wrappers
+└── types/                    # TypeScript data interfaces
+```
+
+---
+
+## 📄 License
+ISC License — TradeSlot Platform.
