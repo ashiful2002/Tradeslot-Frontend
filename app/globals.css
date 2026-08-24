@@ -1,23 +1,84 @@
 @import "tailwindcss";
 
+:root {
+  --primary: #38b6ff;
+  --primary-hover: #2196f3;
+  --primary-light: rgba(56, 182, 255, 0.15);
+  --secondary: #8c52ff;
+  --secondary-hover: #7535e6;
+  --secondary-light: rgba(140, 82, 255, 0.15);
+}
+
+@theme {
+  --color-primary: #38b6ff;
+  --color-secondary: #8c52ff;
+}
+
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 antialiased font-sans min-h-screen selection:bg-emerald-500 selection:text-slate-950;
+    @apply bg-slate-950 text-slate-100 antialiased font-sans min-h-screen selection:bg-[#38b6ff] selection:text-slate-950;
   }
 }
 
-/* Custom Glassmorphism & Animations */
+/* Custom Design System Tokens */
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.border-secondary {
+  border-color: var(--secondary);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: #020617;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(15, 23, 42, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(56, 182, 255, 0.15);
 }
 
 .gradient-glow {
   background: radial-gradient(
     circle at 50% 0%,
-    rgba(16, 185, 129, 0.15),
-    transparent 70%
+    rgba(56, 182, 255, 0.15),
+    rgba(140, 82, 255, 0.1) 50%,
+    transparent 75%
   );
+}
+
+.brand-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.brand-gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

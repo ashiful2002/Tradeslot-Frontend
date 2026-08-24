@@ -1,46 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-  ArrowUpRight,
   CheckCircle2,
   CreditCard,
   ExternalLink,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { paymentService } from "@/services/payment.service";
+import {
+  useCheckConnectStatus,
+  useOnboardStripeConnect,
+} from "@/hooks/useTradeSlot";
 
 export default function StripeConnectCard() {
-  const [status, setStatus] = useState<{
-    stripeAccountId: string | null;
-    onboardingComplete: boolean;
-    detailsSubmitted: boolean;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const { data: statusRes, isLoading } = useCheckConnectStatus();
+  const onboardMutation = useOnboardStripeConnect();
 
-  const fetchStatus = async () => {
-    try {
-      const res = await paymentService.checkConnectStatus();
-      if (res.data) {
-        setStatus(res.data);
-      }
-    } catch (err) {
-      console.warn("Connect status error:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStatus();
-  }, []);
+  const status = statusRes?.data;
 
   const handleStartOnboarding = async () => {
-    setIsGenerating(true);
     try {
-      const res = await paymentService.onboardStripeConnect();
+      const res = await onboardMutation.mutateAsync();
       if (res.data?.onboardingUrl) {
         window.location.href = res.data.onboardingUrl;
       }
@@ -48,8 +29,6 @@ export default function StripeConnectCard() {
       alert(
         `Stripe Onboarding Failed: ${err?.response?.data?.message || err.message}`,
       );
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -76,7 +55,7 @@ export default function StripeConnectCard() {
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
             </h3>
             <p className="text-[11px] text-slate-400">
-              Direct earnings payout with automated £5.00 flat platform fee
+              Direct earnings payout with automated $5.00 flat platform fee
             </p>
           </div>
         </div>
@@ -104,7 +83,7 @@ export default function StripeConnectCard() {
         <div className="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
           <span className="text-slate-400">Platform Fee Split:</span>
           <span className="font-medium text-emerald-400">
-            £5.00 flat fee per completed booking
+            $5.00 flat fee per completed booking
           </span>
         </div>
       </div>
@@ -112,12 +91,12 @@ export default function StripeConnectCard() {
       {!isComplete ? (
         <button
           onClick={handleStartOnboarding}
-          disabled={isGenerating}
-          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
+          disabled={onboardMutation.isPending}
+          className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20 cursor-pointer"
         >
           <ExternalLink className="w-4 h-4" />
           <span>
-            {isGenerating
+            {onboardMutation.isPending
               ? "Generating Onboarding Link..."
               : "Complete Stripe Express Onboarding"}
           </span>

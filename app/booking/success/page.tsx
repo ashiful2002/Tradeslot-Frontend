@@ -7,12 +7,13 @@ import {
   CheckCircle2,
   Clock,
   Home,
+  LayoutDashboard,
   MapPin,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { paymentService } from "@/services/payment.service";
 import { Booking } from "@/types";
+import { useConfirmPayment } from "@/hooks/useTradeSlot";
 
 function BookingSuccessContent() {
   const searchParams = useSearchParams();
@@ -20,36 +21,32 @@ function BookingSuccessContent() {
   const sessionId = searchParams.get("session_id");
 
   const [booking, setBooking] = useState<Booking | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState("");
+
+  const confirmPaymentMutation = useConfirmPayment();
 
   useEffect(() => {
     const confirm = async () => {
       if (!bookingId) {
-        setIsLoading(false);
         return;
       }
 
       try {
-        const res = await paymentService.confirmPayment(
+        const res = await confirmPaymentMutation.mutateAsync({
           bookingId,
-          sessionId || undefined,
-        );
+          sessionId: sessionId || undefined,
+        });
         if (res.data?.booking) {
           setBooking(res.data.booking);
-          setMessage(res.data.message || "Payment confirmed successfully!");
         }
       } catch (err: any) {
         console.warn("Payment confirmation error:", err);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     confirm();
   }, [bookingId, sessionId]);
 
-  if (isLoading) {
+  if (confirmPaymentMutation.isPending) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
         <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto animate-spin">
@@ -78,7 +75,7 @@ function BookingSuccessContent() {
         <h1 className="text-3xl font-black text-white">Booking Accepted!</h1>
         <p className="text-slate-400 text-xs sm:text-sm">
           Your payment has been split and routed directly to the trader with a
-          £5 flat platform fee captured.
+          $5 flat platform fee captured.
         </p>
       </div>
 
@@ -98,7 +95,7 @@ function BookingSuccessContent() {
                 TOTAL PAID
               </span>
               <span className="font-black text-emerald-400 text-base">
-                £{booking.quotedAmount} GBP
+                ${booking.quotedAmount} USD
               </span>
             </div>
           </div>
@@ -127,11 +124,18 @@ function BookingSuccessContent() {
 
       <div className="pt-4 flex items-center justify-center gap-3">
         <Link
+          href="/dashboard/bookings"
+          className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl text-xs transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
+        >
+          <LayoutDashboard className="w-4 h-4" />
+          <span>Go to Customer Dashboard</span>
+        </Link>
+        <Link
           href="/"
-          className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl text-xs transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+          className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-2xl text-xs transition-all flex items-center gap-2 cursor-pointer"
         >
           <Home className="w-4 h-4" />
-          <span>Return to Homepage</span>
+          <span>Return Home</span>
         </Link>
       </div>
     </div>

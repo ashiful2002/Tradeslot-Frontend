@@ -46,7 +46,12 @@ export const authService = {
     return res.data;
   },
 
-  logout() {
+  async logout() {
+    try {
+      await api.post("/auth/logout");
+    } catch (_e) {
+      // Ignore network errors during logout
+    }
     localStorage.removeItem("tradeslot_token");
     localStorage.removeItem("tradeslot_user");
   },

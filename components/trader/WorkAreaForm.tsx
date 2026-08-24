@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { Calendar, CheckCircle, MapPin, Navigation, Plus } from "lucide-react";
-import { traderService } from "@/services/trader.service";
 import { WorkArea } from "@/types";
+import { useSetWorkArea } from "@/hooks/useTradeSlot";
 
 type Props = {
   onSuccess?: (workArea: WorkArea) => void;
@@ -16,18 +16,18 @@ export default function WorkAreaForm({ onSuccess }: Props) {
   const [postalCodePrefix, setPostalCodePrefix] = useState("SW1");
   const [city, setCity] = useState("London");
   const [radiusKm, setRadiusKm] = useState(15);
-  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const setWorkAreaMutation = useSetWorkArea();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!postalCodePrefix.trim()) return;
+    if (!postalCodePrefix.trim() || setWorkAreaMutation.isPending) return;
 
-    setIsLoading(true);
     setMessage(null);
 
     try {
-      const res = await traderService.setWorkArea({
+      const res = await setWorkAreaMutation.mutateAsync({
         workDate,
         postalCodePrefix: postalCodePrefix.trim().toUpperCase(),
         city: city.trim() || undefined,
@@ -42,8 +42,6 @@ export default function WorkAreaForm({ onSuccess }: Props) {
       }
     } catch (err: any) {
       setMessage(`Error: ${err?.response?.data?.message || err.message}`);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -74,7 +72,7 @@ export default function WorkAreaForm({ onSuccess }: Props) {
               type="date"
               value={workDate}
               onChange={(e) => setWorkDate(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500 font-medium"
             />
           </div>
 
@@ -88,7 +86,7 @@ export default function WorkAreaForm({ onSuccess }: Props) {
               placeholder="e.g. SW1, EC1, E1"
               value={postalCodePrefix}
               onChange={(e) => setPostalCodePrefix(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white uppercase focus:outline-none focus:border-teal-500"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white uppercase focus:outline-none focus:border-teal-500 font-medium"
             />
           </div>
         </div>
@@ -103,7 +101,7 @@ export default function WorkAreaForm({ onSuccess }: Props) {
               placeholder="e.g. Central London"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500 font-medium"
             />
           </div>
 
@@ -115,7 +113,7 @@ export default function WorkAreaForm({ onSuccess }: Props) {
               type="number"
               value={radiusKm}
               onChange={(e) => setRadiusKm(Number(e.target.value))}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500 font-medium"
             />
           </div>
         </div>
@@ -135,12 +133,14 @@ export default function WorkAreaForm({ onSuccess }: Props) {
 
         <button
           type="submit"
-          disabled={isLoading}
-          className="w-full py-2.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-slate-950 font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/20"
+          disabled={setWorkAreaMutation.isPending}
+          className="w-full py-2.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-slate-950 font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-teal-500/20 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>
-            {isLoading ? "Saving Coverage Zone..." : "Save Daily Coverage Area"}
+            {setWorkAreaMutation.isPending
+              ? "Saving Coverage Zone..."
+              : "Save Daily Coverage Area"}
           </span>
         </button>
       </form>

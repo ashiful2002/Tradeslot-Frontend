@@ -5,12 +5,13 @@ const BASE_URL =
 
 export const api = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,  
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Attach JWT token dynamically from localStorage if present
+// Fallback token interceptor if stored in localStorage
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("tradeslot_token");
