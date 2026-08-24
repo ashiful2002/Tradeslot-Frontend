@@ -77,7 +77,7 @@ export default function HomePage() {
 
         <p className="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
           Intelligent schedule optimization with automatic 30-minute travel buffers,
-          instant WhatsApp & Web chatbot intake, and transparent Stripe payouts.
+          instant AI Web chatbot intake, and transparent Stripe payouts.
         </p>
 
         {/* Search & Category Filter */}
@@ -206,7 +206,7 @@ export default function HomePage() {
               <span>AI Chatbot Intake</span>
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Describe your repair issue or service request via WhatsApp or Web Chatbot. The AI extracts service address, duration, and urgency.
+              Describe your repair issue or service request via Web Chatbot. The AI extracts service address, duration, and urgency.
             </p>
           </div>
 
@@ -268,7 +268,7 @@ export default function HomePage() {
             </div>
             <h3 className="text-base font-bold text-white">Multi-Channel Chat</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Accept job intakes seamlessly across WhatsApp webhook integration and Web widgets.
+              Accept job intakes seamlessly across intelligent AI Web widgets and multi-channel backend.
             </p>
           </div>
 

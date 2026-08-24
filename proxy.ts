@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
   const token =
+    request.cookies.get("tradeslot_token")?.value ||
     request.cookies.get("token")?.value ||
     request.cookies.get("accessToken")?.value;
   const { pathname } = request.nextUrl;

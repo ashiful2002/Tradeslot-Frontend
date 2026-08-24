@@ -14,7 +14,7 @@ import { useLogin } from "@/hooks/useTradeSlot";
 
 const DEMO_USERS = [
   {
-    label: "Demo Plumber (Arthur Pendelton)",
+    label: "Demo Plumber (Arthur Pendleton)",
     email: "trader1@tradeslot.com",
     password: "password123",
     role: "TRADER",
@@ -28,48 +28,6 @@ const DEMO_USERS = [
   {
     label: "Demo Heating Specialist (Marcus Vance)",
     email: "trader3@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo Carpenter (David Miller)",
-    email: "trader4@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo Roofer (Sarah Jenkins)",
-    email: "trader5@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo Painter & Decorator (Carlos Mendoza)",
-    email: "trader6@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo Landscaper (Oliver Greenwood)",
-    email: "trader7@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo Tile & Stone Specialist (Sofia Bianchi)",
-    email: "trader8@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo 24/7 Locksmith (Jack O'Connor)",
-    email: "trader9@tradeslot.com",
-    password: "password123",
-    role: "TRADER",
-  },
-  {
-    label: "Demo HVAC Tech (Liam Gallagher)",
-    email: "trader10@tradeslot.com",
     password: "password123",
     role: "TRADER",
   },
@@ -89,6 +47,7 @@ const DEMO_USERS = [
 
 export default function LoginPage() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [selectedDemoIndex, setSelectedDemoIndex] = useState<string>("");
@@ -116,12 +75,9 @@ export default function LoginPage() {
     setErrorMessage(null);
 
     try {
-      const res = await loginMutation.mutateAsync({ email, password });
-      if (res?.data?.user) {
-        router.push("/dashboard");
-      } else {
-        router.push("/dashboard");
-      }
+      await loginMutation.mutateAsync({ email, password });
+      // Force navigation to dashboard for immediate state sync
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setErrorMessage(
         err?.response?.data?.message ||
@@ -138,25 +94,26 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8 bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-xl">
         {/* Header */}
         <div className="text-center space-y-3">
-
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#38b6ff]/10 border border-[#38b6ff]/20 text-[#38b6ff] text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[#8c52ff]" />
+            <span>Trader & Client Sign In</span>
+          </div>
 
           <h1 className="text-3xl font-black text-white tracking-tight">
-            Welcome Back to <span className="text-emerald-400">TradeSlot</span>
+            Welcome Back to <span className="brand-gradient-text">TradeSlot</span>
           </h1>
-
-
         </div>
 
         {/* Quick Demo Select Dropdown */}
         <div className="p-4 bg-slate-950/80 border border-slate-800 rounded-2xl space-y-2">
           <label className="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Instant Demo Account Selector (20 Seeded Traders)</span>
+            <User className="w-3.5 h-3.5 text-[#38b6ff]" />
+            <span>Instant Demo Account Selector</span>
           </label>
           <select
             value={selectedDemoIndex}
             onChange={handleSelectDemoUser}
-            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-medium cursor-pointer"
+            className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38b6ff] font-medium cursor-pointer"
           >
             <option value="">-- Choose Demo Account --</option>
             {DEMO_USERS.map((u, i) => (
@@ -190,7 +147,7 @@ export default function LoginPage() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-[#38b6ff] text-sm font-medium"
             />
           </div>
 
@@ -205,14 +162,14 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 text-sm font-medium"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-[#38b6ff] text-sm font-medium"
             />
           </div>
 
           <button
             type="submit"
             disabled={loginMutation.isPending}
-            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold rounded-2xl text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 mt-2 cursor-pointer"
+            className="w-full py-3.5 btn-primary rounded-2xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#38b6ff]/20 mt-2 cursor-pointer"
           >
             <span>{loginMutation.isPending ? "Authenticating..." : "Sign In"}</span>
             <ArrowRight className="w-4 h-4" />
@@ -224,7 +181,7 @@ export default function LoginPage() {
           <span>Don&apos;t have an account yet? </span>
           <Link
             href="/register"
-            className="text-emerald-400 font-bold hover:underline cursor-pointer"
+            className="text-[#38b6ff] font-bold hover:underline cursor-pointer"
           >
             Create an Account
           </Link>
