@@ -36,7 +36,7 @@ export default function DashboardSidebar({ currentUser }: SidebarProps) {
   const handleConfirmLogout = async () => {
     try {
       await logoutMutation.mutateAsync();
-    } catch (_err) {
+    } catch {
       // Fallback
     } finally {
       setIsLogoutModalOpen(false);
@@ -74,9 +74,8 @@ export default function DashboardSidebar({ currentUser }: SidebarProps) {
   return (
     <>
       <aside
-        className={`bg-slate-900/90 border-r border-slate-800 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between h-[calc(100vh-5rem)] sticky top-20 rounded-3xl p-4 shadow-2xl ${
-          isCollapsed ? "w-20" : "w-64"
-        }`}
+        className={`bg-slate-900/90 border-r border-slate-800 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between h-[calc(100vh-5rem)] sticky top-20 rounded-3xl p-4 shadow-2xl ${isCollapsed ? "w-20" : "w-64"
+          }`}
       >
         {/* Sidebar Header */}
         <div className="space-y-6">
@@ -120,16 +119,14 @@ export default function DashboardSidebar({ currentUser }: SidebarProps) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
-                    isActive
+                  className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${isActive
                       ? "bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20"
                       : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-                  }`}
+                    }`}
                 >
                   <Icon
-                    className={`w-4 h-4 shrink-0 ${
-                      isActive ? "text-slate-950" : "text-slate-400"
-                    }`}
+                    className={`w-4 h-4 shrink-0 ${isActive ? "text-slate-950" : "text-slate-400"
+                      }`}
                   />
                   {!isCollapsed && <span>{item.label}</span>}
                 </Link>
@@ -138,18 +135,16 @@ export default function DashboardSidebar({ currentUser }: SidebarProps) {
 
             <Link
               href="/dashboard/profile"
-              className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer mt-2 ${
-                pathname === "/dashboard/profile"
+              className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer mt-2 ${pathname === "/dashboard/profile"
                   ? "bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-              }`}
+                }`}
             >
               <User
-                className={`w-4 h-4 shrink-0 ${
-                  pathname === "/dashboard/profile"
+                className={`w-4 h-4 shrink-0 ${pathname === "/dashboard/profile"
                     ? "text-slate-950"
                     : "text-indigo-400"
-                }`}
+                  }`}
               />
               {!isCollapsed && <span>My Profile</span>}
             </Link>
@@ -168,9 +163,8 @@ export default function DashboardSidebar({ currentUser }: SidebarProps) {
         {currentUser && (
           <div className="border-t border-slate-800 pt-4 space-y-3">
             <div
-              className={`flex items-center gap-3 ${
-                isCollapsed ? "justify-center" : "justify-between"
-              }`}
+              className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : "justify-between"
+                }`}
             >
               <Link
                 href="/dashboard/profile"

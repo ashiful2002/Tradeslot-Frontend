@@ -44,6 +44,7 @@ function BookingSuccessContent() {
     };
 
     confirm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookingId, sessionId]);
 
   if (confirmPaymentMutation.isPending) {

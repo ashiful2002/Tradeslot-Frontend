@@ -74,7 +74,7 @@ export const authService = {
   async logout() {
     try {
       await api.post("/auth/logout");
-    } catch (_e) {
+    } catch {
       // Ignore network errors during logout
     }
     localStorage.removeItem("tradeslot_token");

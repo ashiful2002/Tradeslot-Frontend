@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   title: "TradeSlot — Booking Platform for Tradespeople",
   description:
     "Book verified local tradespeople with automated scheduling, travel buffers, and Stripe Connect payments.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

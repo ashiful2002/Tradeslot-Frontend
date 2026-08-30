@@ -32,7 +32,7 @@ export default function Navbar() {
   const handleConfirmLogout = async () => {
     try {
       await logoutMutation.mutateAsync();
-    } catch (_err) {
+    } catch {
       // Fallback
     } finally {
       setCurrentUser(null);

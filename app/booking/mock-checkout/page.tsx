@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { CreditCard, Lock, ShieldCheck, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import { CreditCard, Lock, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 import { bookingService } from "@/services/booking.service";
 import { paymentService } from "@/services/payment.service";
 import { Booking } from "@/types";
@@ -49,11 +49,21 @@ function MockCheckoutContent() {
       // 1. Confirm payment on Express backend
       await paymentService.confirmPayment(bookingId, sessionId || undefined);
 
-      // 2. Direct user straight to Customer Dashboard Bookings view!
-      router.push("/dashboard/bookings");
+      // 2. Direct parent window to Customer Dashboard Bookings view & close popup
+      if (window.opener && !window.opener.closed) {
+        window.opener.location.href = "/dashboard/bookings";
+        window.close();
+      } else {
+        router.push("/dashboard/bookings");
+      }
     } catch (err: any) {
       console.warn("Payment Simulation Note:", err);
-      router.push("/dashboard/bookings");
+      if (window.opener && !window.opener.closed) {
+        window.opener.location.href = "/dashboard/bookings";
+        window.close();
+      } else {
+        router.push("/dashboard/bookings");
+      }
     } finally {
       setIsProcessing(false);
     }

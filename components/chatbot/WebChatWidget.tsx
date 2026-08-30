@@ -10,6 +10,7 @@ import {
   Sparkles,
   UserCheck,
   X,
+  Zap,
 } from "lucide-react";
 import { bookingService } from "@/services/booking.service";
 import { traderService } from "@/services/trader.service";
@@ -41,13 +42,26 @@ type Props = {
   onClose: () => void;
 };
 
+const DEMO_PROMPTS = [
+  "My bathroom shower is broken, I need a plumber on 30 Aug 2026 in SW1",
+  "Electrician needed for light fixture on 30 Aug 2026 in E1",
+  "Emergency heating repair needed on 30 Aug 2026 in NW3",
+];
+
+const generateId = (): string => {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return `msg_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+};
+
 export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
   const [currentTrader, setCurrentTrader] = useState<Trader>(trader);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       sender: "bot",
-      text: `Hello! I'm TradeSlot's AI booking intake assistant. How can we help you today? Try typing: "My bathroom shower is broken, I need a plumber on 30 Aug 2026 in SW1".`,
+      text: `Hello! I'm TradeSlot's AI booking intake assistant. Click one of the test prompts below or type your request to instantly book a trader.`,
       timestamp: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -153,14 +167,13 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
     }
   };
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputText.trim() || sendWebMessageMutation.isPending) return;
+  const processMessageText = async (textToSend: string) => {
+    if (!textToSend.trim() || sendWebMessageMutation.isPending) return;
 
     const userMsg: Message = {
-      id: Date.now().toString(),
+      id: generateId(),
       sender: "user",
-      text: inputText,
+      text: textToSend,
       timestamp: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -168,21 +181,20 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
     };
 
     setMessages((prev) => [...prev, userMsg]);
-    const currentInput = inputText;
     setInputText("");
 
     try {
       // 1. Trigger Intake Normalizer API via TanStack Mutation
       const botResult = await sendWebMessageMutation.mutateAsync({
         traderId: currentTrader.id,
-        message: currentInput,
+        message: textToSend,
         customerId: guestId,
       });
       const botReply = botResult?.outboundReply;
 
       if (botReply) {
         const botMsg: Message = {
-          id: (Date.now() + 1).toString(),
+          id: generateId(),
           sender: "bot",
           text: botReply.content,
           timestamp: new Date().toLocaleTimeString([], {
@@ -216,11 +228,11 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
           await fetchSlotsForTrader(currentTrader.id, targetDate, targetPostal);
         }
       }
-    } catch (_err: any) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: generateId(),
           sender: "bot",
           text: "Sorry, I had trouble processing your request. Please ensure the backend server is running.",
           timestamp: new Date().toLocaleTimeString([], {
@@ -230,6 +242,11 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
         },
       ]);
     }
+  };
+
+  const handleSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    processMessageText(inputText);
   };
 
   const handleSelectMatchedTrader = (t: MatchedTrader) => {
@@ -271,7 +288,7 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
           city: "London",
           radiusKm: 15,
         });
-      } catch (_e) {
+      } catch {
         // Ignore if trader work area already set
       }
 
@@ -296,7 +313,7 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
       const checkoutRes = await createCheckoutMutation.mutateAsync(bookingId);
       const checkoutUrl = checkoutRes.data.checkoutUrl;
 
-      // 4. Redirect to Checkout
+      // 4. Directly Navigate to Stripe Checkout Page
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       }
@@ -321,7 +338,7 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 w-96 sm:w-[440px] max-h-[90vh] h-[620px] bg-slate-950 border border-slate-800 rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden text-white animate-in slide-in-from-bottom-5 duration-300">
+      <div className="fixed bottom-6 right-6 w-96 sm:w-[440px] max-h-[90vh] h-[640px] bg-slate-950 border border-slate-800 rounded-3xl shadow-2xl z-50 flex flex-col overflow-hidden text-white animate-in slide-in-from-bottom-5 duration-300">
         {/* Header */}
         <div className="p-4 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
@@ -355,11 +372,10 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
               className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
             >
               <div
-                className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl ${
-                  msg.sender === "user"
-                    ? "bg-[#38b6ff] text-slate-950 rounded-br-none font-bold shadow-md shadow-[#38b6ff]/20"
-                    : "bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none"
-                }`}
+                className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl ${msg.sender === "user"
+                  ? "bg-[#38b6ff] text-slate-950 rounded-br-none font-bold shadow-md shadow-[#38b6ff]/20"
+                  : "bg-slate-900 text-slate-200 border border-slate-800 rounded-bl-none"
+                  }`}
               >
                 {msg.text}
               </div>
@@ -368,6 +384,30 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
               </span>
             </div>
           ))}
+
+          {/* Quick Demo Test Prompt Chips */}
+          {messages.length <= 2 && !sendWebMessageMutation.isPending && (
+            <div className="p-3 bg-slate-900/90 border border-slate-800 rounded-2xl space-y-2 my-2">
+              <div className="text-[11px] font-bold text-[#38b6ff] flex items-center gap-1">
+                <Zap className="w-3.5 h-3.5 text-[#8c52ff]" />
+                <span>Instant One-Click Test Prompts:</span>
+              </div>
+              <div className="space-y-1.5">
+                {DEMO_PROMPTS.map((prompt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => processMessageText(prompt)}
+                    className="w-full text-left p-2 rounded-xl bg-slate-950 border border-slate-800 hover:border-[#38b6ff]/60 text-xs text-slate-300 hover:text-white transition-all flex items-center justify-between group cursor-pointer"
+                  >
+                    <span className="line-clamp-1">{prompt}</span>
+                    <span className="text-[10px] text-[#38b6ff] font-bold shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">
+                      Send &rarr;
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {sendWebMessageMutation.isPending && (
             <div className="flex items-center gap-2 text-slate-400 text-xs py-1">
@@ -392,11 +432,10 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
                   <button
                     key={t.id}
                     onClick={() => handleSelectMatchedTrader(t)}
-                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
-                      currentTrader.id === t.id
-                        ? "bg-[#38b6ff]/10 border-[#38b6ff] text-white font-bold"
-                        : "bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700"
-                    }`}
+                    className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${currentTrader.id === t.id
+                      ? "bg-[#38b6ff]/10 border-[#38b6ff] text-white font-bold"
+                      : "bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700"
+                      }`}
                   >
                     <div>
                       <div className="text-xs font-bold text-white">{t.businessName}</div>
@@ -443,13 +482,12 @@ export default function WebChatWidget({ trader, isOpen, onClose }: Props) {
                       key={i}
                       disabled={!slot.isAvailable}
                       onClick={() => setSelectedSlot(slot)}
-                      className={`p-2 rounded-xl text-center transition-all border cursor-pointer ${
-                        !slot.isAvailable
-                          ? "opacity-40 bg-slate-950 border-slate-800 text-slate-500 cursor-not-allowed"
-                          : isSelected
-                            ? "brand-gradient text-slate-950 font-bold border-[#38b6ff] shadow-md shadow-[#38b6ff]/20"
-                            : "bg-slate-950 text-slate-200 border-slate-800 hover:border-[#38b6ff]/50"
-                      }`}
+                      className={`p-2 rounded-xl text-center transition-all border cursor-pointer ${!slot.isAvailable
+                        ? "opacity-40 bg-slate-950 border-slate-800 text-slate-500 cursor-not-allowed"
+                        : isSelected
+                          ? "brand-gradient text-slate-950 font-bold border-[#38b6ff] shadow-md shadow-[#38b6ff]/20"
+                          : "bg-slate-950 text-slate-200 border-slate-800 hover:border-[#38b6ff]/50"
+                        }`}
                     >
                       <div>{startTimeStr}</div>
                       <div className="text-[9px] opacity-80">
