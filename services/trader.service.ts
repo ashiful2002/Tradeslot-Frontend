@@ -58,4 +58,25 @@ export const traderService = {
     });
     return res.data;
   },
+
+  async aiFindTrader(payload: {
+    role: string;
+    technologies: string;
+    experience: string;
+  }) {
+    const res = await api.post<
+      ApiResponse<{
+        recommendations: Array<{
+          traderId: string;
+          businessName: string;
+          fullName: string;
+          matchScore: number;
+          aiSummary: string;
+        }>;
+        searchSummary: string;
+        matchedSkills: string[];
+      }>
+    >("/ai/find-trader", payload);
+    return res.data;
+  },
 };

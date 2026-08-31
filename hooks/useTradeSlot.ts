@@ -247,3 +247,13 @@ export function useConfirmPayment() {
     },
   });
 }
+
+export function useAiFindTrader() {
+  return useMutation({
+    mutationFn: (payload: {
+      role: string;
+      technologies: string;
+      experience: string;
+    }) => traderService.aiFindTrader(payload),
+  });
+}
